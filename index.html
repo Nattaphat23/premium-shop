@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ณภัทร & พรีเมี่ยม</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">✨ ณภัทร & พรีเมี่ยม</div>
+  <nav>
+    <button onclick="go('products-section')">สินค้า</button>
+    <button onclick="go('cart')">ตะกร้า</button>
+    <button onclick="go('orders')">ออเดอร์</button>
+    <button id="loginBtn" onclick="openRegister()">เข้าสู่ระบบ</button>
+    <button class="admin" onclick="openAdminLogin()">👑 Admin</button>
+  </nav>
+</header>
+<main>
+<section class="hero">
+  <div>
+    <p class="eyebrow">PREMIUM DIGITAL STORE</p>
+    <h1>ร้านพรีเมียม<br>ใช้งานง่าย สั่งซื้อเป็นระบบ</h1>
+    <p>เลือกสินค้า → สร้างออเดอร์ → ชำระตามยอด → แนบสลิป → รอตรวจสอบ</p>
+  </div>
+</section>
+
+<section id="products-section" class="section">
+  <div class="section-head">
+    <div><h2>สินค้า</h2><p>เลือกสินค้าที่ต้องการแล้วเพิ่มลงตะกร้า</p></div>
+    <input id="search" placeholder="ค้นหาสินค้า..." oninput="renderProducts()">
+  </div>
+  <div id="products" class="grid"></div>
+</section>
+
+<section id="cart" class="section panel">
+  <h2>🛒 ตะกร้าสินค้า</h2>
+  <div id="cart"></div>
+  <div class="total">รวมทั้งหมด <b id="total">฿0</b></div>
+  <button class="primary" onclick="checkout()">สร้างออเดอร์</button>
+</section>
+
+<section id="orders" class="section panel">
+  <h2>📦 ออเดอร์ของฉัน</h2>
+  <div id="ordersList">กรุณาสมัครสมาชิกหรือเข้าสู่ระบบ</div>
+</section>
+
+<section class="section panel">
+  <h2>💳 ช่องทางชำระเงิน</h2>
+  <div id="paybox" class="paybox"></div>
+</section>
+</main>
+
+<div id="modal" class="modal"></div>
+<script src="/app.js"></script>
+</body>
+</html>
