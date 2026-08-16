@@ -43,7 +43,7 @@ function nextId(arr){ return arr.length ? Math.max(...arr.map(x=>Number(x.id)||0
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use("/uploads", express.static(UPLOAD_DIR));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname));
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -130,5 +130,5 @@ app.put("/api/admin/orders/:id/status",adminOnly,(req,res)=>{
   o.status=req.body.status; writeDB(db); res.json(o);
 });
 
-app.get("*",(req,res)=>res.sendFile(path.join(__dirname,"public","index.html")));
+app.get("*",(req,res)=>res.sendFile(path.join(__dirname,"index.html")));
 app.listen(PORT,()=>console.log(`Premium Shop running on port ${PORT}`));
