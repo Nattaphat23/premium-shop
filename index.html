@@ -1,58 +1,132 @@
 <!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ณภัทร & พรีเมี่ยม</title>
-<link rel="stylesheet" href="/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ณภัทร & พรีเมี่ยม</title>
+  <meta name="description" content="ร้านพรีเมี่ยมดิจิทัล">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top">
-  <div class="brand">✨ ณภัทร & พรีเมี่ยม</div>
-  <nav>
-    <button onclick="go('products-section')">สินค้า</button>
-    <button onclick="go('cart')">ตะกร้า</button>
-    <button onclick="go('orders')">ออเดอร์</button>
-    <button id="loginBtn" onclick="openRegister()">เข้าสู่ระบบ</button>
-    <button class="admin" onclick="openAdminLogin()">👑 Admin</button>
-  </nav>
-</header>
-<main>
-<section class="hero">
-  <div>
-    <p class="eyebrow">PREMIUM DIGITAL STORE</p>
-    <h1>ร้านพรีเมียม<br>ใช้งานง่าย สั่งซื้อเป็นระบบ</h1>
-    <p>เลือกสินค้า → สร้างออเดอร์ → ชำระตามยอด → แนบสลิป → รอตรวจสอบ</p>
+  <div id="toast" class="toast"></div>
+
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#" onclick="go('products');return false;">
+        <span class="brand-icon">✦</span>
+        <span>ณภัทร & พรีเมี่ยม</span>
+      </a>
+      <nav>
+        <button onclick="go('products')">สินค้า</button>
+        <button onclick="go('cart')">ตะกร้า <b id="cartCount">0</b></button>
+        <button onclick="go('orders')">ออเดอร์</button>
+        <button id="authBtn" onclick="openAuth()">เข้าสู่ระบบ</button>
+        <button class="admin-btn" onclick="openAdmin()">👑 Admin</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <span class="eyebrow">PREMIUM DIGITAL STORE</span>
+        <h1>ร้านพรีเมี่ยม<br><span>ใช้งานง่าย สั่งซื้อเป็นระบบ</span></h1>
+        <p>เลือกสินค้า → สร้างออเดอร์ → ชำระตามยอด → แนบสลิป → รอตรวจสอบ</p>
+        <div class="hero-actions">
+          <button class="primary" onclick="go('products')">เลือกสินค้า</button>
+          <button class="ghost" onclick="go('orders')">ตรวจสอบออเดอร์</button>
+        </div>
+      </div>
+      <div class="hero-orb">✦</div>
+    </section>
+
+    <section id="products" class="section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">SHOP</span>
+          <h2>สินค้าแนะนำ</h2>
+        </div>
+        <input id="search" placeholder="ค้นหาสินค้า..." oninput="renderProducts()">
+      </div>
+      <div id="productGrid" class="grid"></div>
+    </section>
+
+    <section id="cart" class="section panel">
+      <div class="section-head"><h2>🛒 ตะกร้าสินค้า</h2><span id="cartTotal"></span></div>
+      <div id="cartList"></div>
+      <div class="checkout-row">
+        <button class="ghost" onclick="go('products')">เลือกสินค้าเพิ่ม</button>
+        <button class="primary" onclick="checkout()">สร้างออเดอร์</button>
+      </div>
+    </section>
+
+    <section id="orders" class="section panel">
+      <div class="section-head"><h2>📦 ออเดอร์ของฉัน</h2></div>
+      <div id="ordersList"></div>
+    </section>
+
+    <section class="section panel payment">
+      <div>
+        <span class="eyebrow">PAYMENT</span>
+        <h2>💳 ช่องทางชำระเงิน</h2>
+        <p>ระบบจะคำนวณยอดตามออเดอร์ และให้แนบสลิปเพื่อส่งตรวจสอบ</p>
+      </div>
+      <button class="primary" onclick="openPayment()">ดูวิธีชำระเงิน</button>
+    </section>
+  </main>
+
+  <div id="authModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="close" onclick="closeModal('authModal')">×</button>
+      <h2 id="authTitle">เข้าสู่ระบบ</h2>
+      <p class="muted">สมัครสมาชิกก่อนสั่งซื้อ เพื่อเก็บประวัติออเดอร์</p>
+      <input id="authName" class="auth-extra hidden" placeholder="ชื่อผู้ใช้">
+      <input id="authEmail" type="email" placeholder="อีเมล">
+      <input id="authPass" type="password" placeholder="รหัสผ่าน">
+      <button class="primary full" onclick="submitAuth()">ดำเนินการต่อ</button>
+      <button class="link-btn" id="switchAuth" onclick="switchAuth()">ยังไม่มีบัญชี? สมัครสมาชิก</button>
+    </div>
   </div>
-</section>
 
-<section id="products-section" class="section">
-  <div class="section-head">
-    <div><h2>สินค้า</h2><p>เลือกสินค้าที่ต้องการแล้วเพิ่มลงตะกร้า</p></div>
-    <input id="search" placeholder="ค้นหาสินค้า..." oninput="renderProducts()">
+  <div id="paymentModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="close" onclick="closeModal('paymentModal')">×</button>
+      <h2>💳 ชำระเงิน</h2>
+      <div class="bank-card">
+        <b>บัญชีร้าน</b>
+        <p>ธนาคาร: ไทยพาณิชย์</p>
+        <p>ชื่อบัญชี: ณภัทร & พรีเมี่ยม</p>
+        <p class="muted">หมายเลขบัญชีให้ใส่ในระบบจริงก่อนเปิดใช้งาน</p>
+      </div>
+      <label class="upload">
+        <span>📎 แนบสลิปการโอนเงิน</span>
+        <input id="slipInput" type="file" accept="image/*" onchange="previewSlip()">
+      </label>
+      <img id="slipPreview" class="slip-preview hidden">
+      <button class="primary full" onclick="submitSlip()">ส่งสลิปตรวจสอบ</button>
+    </div>
   </div>
-  <div id="products" class="grid"></div>
-</section>
 
-<section id="cart" class="section panel">
-  <h2>🛒 ตะกร้าสินค้า</h2>
-  <div id="cart"></div>
-  <div class="total">รวมทั้งหมด <b id="total">฿0</b></div>
-  <button class="primary" onclick="checkout()">สร้างออเดอร์</button>
-</section>
+  <div id="adminModal" class="modal hidden">
+    <div class="modal-card wide">
+      <button class="close" onclick="closeModal('adminModal')">×</button>
+      <h2>👑 Admin Dashboard</h2>
+      <div class="admin-stats">
+        <div><b id="statProducts">0</b><span>สินค้า</span></div>
+        <div><b id="statOrders">0</b><span>ออเดอร์</span></div>
+        <div><b id="statPaid">0</b><span>รอตรวจสลิป</span></div>
+      </div>
+      <div class="admin-form">
+        <h3>เพิ่มสินค้า</h3>
+        <input id="newName" placeholder="ชื่อสินค้า">
+        <input id="newPrice" type="number" placeholder="ราคา (บาท)">
+        <input id="newDuration" placeholder="ระยะเวลา เช่น 30 วัน">
+        <button class="primary" onclick="addProduct()">+ เพิ่มสินค้า</button>
+      </div>
+      <div id="adminOrders"></div>
+    </div>
+  </div>
 
-<section id="orders" class="section panel">
-  <h2>📦 ออเดอร์ของฉัน</h2>
-  <div id="ordersList">กรุณาสมัครสมาชิกหรือเข้าสู่ระบบ</div>
-</section>
-
-<section class="section panel">
-  <h2>💳 ช่องทางชำระเงิน</h2>
-  <div id="paybox" class="paybox"></div>
-</section>
-</main>
-
-<div id="modal" class="modal"></div>
-<script src="/app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
